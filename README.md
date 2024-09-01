@@ -37,7 +37,7 @@ Berikut adalah contoh penggunaan module ini
 
 ```hcl
 module "azurerm_vm" {
-    source              = "https://github.com/dxh30/azurerm_vm.git"
+    source              = "github.com/dxh30/azurerm_vm"
     vm_name             = "contoh-vm"
     location            = "West US"
     resource_group_name = "nama-sg"
