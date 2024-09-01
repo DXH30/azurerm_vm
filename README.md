@@ -13,11 +13,11 @@ Modul ini digunakan untuk membuat VM di Azure. Modul ini menyediakan konfigurasi
 ## Struktur Modul
 
 ```
-azurerm_vm/
+.
 |--- main.tf
 |--- variables.tf
 |--- outputs.tf
-|___ README.md
+|--- README.md
 ```
 
 ## Variable
@@ -37,7 +37,7 @@ Berikut adalah contoh penggunaan module ini
 
 ```hcl
 module "azurerm_vm" {
-    source              = "github.com/dxh30/azurerm_vm"
+    source              = "github.com/dxh30/azurerm-vm"
     vm_name             = "contoh-vm"
     location            = "West US"
     resource_group_name = "nama-sg"
