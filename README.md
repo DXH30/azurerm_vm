@@ -45,3 +45,43 @@ module "azurerm_vm" {
     admin_username      = "azureuser"
 }
 ```
+
+## Penambahan Network Security Group
+```hcl
+module "azurerm_vm" {
+    source              = "github.com/dxh30/terraform-azurerm-vm"
+    vm_name             = "contoh-vm"
+    location            = "West US"
+    resource_group_name = "nama-sg"
+    vm_size             = "Standard_B1s"
+    admin_username      = "azureuser"
+    security_rule       = locals.security_rules
+}
+
+locals {
+  security_rules = [
+    {
+      name                       = "AllowSSH"
+      priority                   = 1000
+      direction                  = "Inbound"
+      access                     = "Allow"
+      protocol                   = "Tcp"
+      source_port_range          = "*"
+      destination_port_range     = "22"
+      source_address_prefix      = "*"
+      destination_address_prefix = "*"
+    },
+    {
+      name                       = "AllowPostgres"
+      priority                   = 1100
+      direction                  = "Inbound"
+      access                     = "Allow"
+      protocol                   = "Tcp"
+      source_port_range          = "*"
+      destination_port_range     = "5432"
+      source_address_prefix      = "*"
+      destination_address_prefix = "*"
+    }
+  ]
+}
+```

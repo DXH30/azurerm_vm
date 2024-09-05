@@ -3,6 +3,24 @@ variable "resource_group_name" {
   type        = string
 }
 
+variable "security_rule" {
+  description = "The list of security group rule"
+  type        = list(map(string))
+  default = [
+    {
+      name                       = "AllowSSH"
+      priority                   = 1000
+      direction                  = "Inbound"
+      access                     = "Allow"
+      protocol                   = "Tcp"
+      source_port_range          = "*"
+      destination_port_range     = "22"
+      source_address_prefix      = "*"
+      destination_address_prefix = "*"
+    }
+  ]
+}
+
 variable "location" {
   description = "The location of the resource group"
   type        = string
