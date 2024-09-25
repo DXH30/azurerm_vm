@@ -1,87 +1,50 @@
 # Terraform Azure VM Module
 
-## Deskripsi
+## Requirements
 
-Modul ini digunakan untuk membuat VM di Azure. Modul ini menyediakan konfigurasi dasar untuk VM, termasuk jaringan, ukuran VM, dan sistem operasi.
+No requirements.
 
-## Prerequisites
+## Providers
 
-- Terraform v1.5 lebih
-- Akun Microsoft Azure, dengan akses yang dibutuhkan
-- Azure CLI atau Azure Powershell untuk autentikasi
+| Name | Version |
+|------|---------|
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | n/a |
+| <a name="provider_tls"></a> [tls](#provider\_tls) | n/a |
 
-## Struktur Modul
+## Modules
 
-```
-.
-|--- main.tf
-|--- variables.tf
-|--- outputs.tf
-|--- README.md
-```
+No modules.
 
-## Variable
-Berikut adalah variable yang dapat dikonfigurasi dalam modul ini :
+## Resources
 
-| Nama Variable         | Tipe   | Deskripsi           | Default           |
-|-----------------------|--------|---------------------|-------------------|
-| `vm_name`             | string | Nama VM             |-                  |
-| `location`            | string | Lokasi VM           |"East US"          |
-| `resource_group_name` | string | Nama Resource Group | -                 |
-| `vm_size`             | string | Ukuran VM           | "Standard_DS1_v2" |
-| `admin_username`      | string | Username Admin      | -                 |
+| Name | Type |
+|------|------|
+| [azurerm_linux_virtual_machine.vm](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_virtual_machine) | resource |
+| [azurerm_network_interface.nic](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_interface) | resource |
+| [azurerm_network_interface_security_group_association.nsg-nic](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_interface_security_group_association) | resource |
+| [azurerm_network_security_group.nsg](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_security_group) | resource |
+| [azurerm_public_ip.public_ip](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/public_ip) | resource |
+| [azurerm_resource_group.vm_rg](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group) | resource |
+| [azurerm_subnet.subnet](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/subnet) | resource |
+| [azurerm_virtual_network.vnet](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_network) | resource |
+| [tls_private_key.ssh_key](https://registry.terraform.io/providers/hashicorp/tls/latest/docs/resources/private_key) | resource |
 
-## Contoh Penggunaan
+## Inputs
 
-Berikut adalah contoh penggunaan module ini
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_admin_username"></a> [admin\_username](#input\_admin\_username) | The admin username for the VM | `string` | n/a | yes |
+| <a name="input_location"></a> [location](#input\_location) | The location of the resource group | `string` | `"East US"` | no |
+| <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | The name of the resource group | `string` | n/a | yes |
+| <a name="input_security_rule"></a> [security\_rule](#input\_security\_rule) | The list of security group rule | `list(map(string))` | <pre>[<br/>  {<br/>    "access": "Allow",<br/>    "destination_address_prefix": "*",<br/>    "destination_port_range": "22",<br/>    "direction": "Inbound",<br/>    "name": "AllowSSH",<br/>    "priority": 1000,<br/>    "protocol": "Tcp",<br/>    "source_address_prefix": "*",<br/>    "source_port_range": "*"<br/>  }<br/>]</pre> | no |
+| <a name="input_vm_name"></a> [vm\_name](#input\_vm\_name) | The name of the virtual machine | `string` | n/a | yes |
+| <a name="input_vm_size"></a> [vm\_size](#input\_vm\_size) | The size of the virtual machine | `string` | `"Standard_B1s"` | no |
 
-```hcl
-module "azurerm_vm" {
-    source              = "github.com/dxh30/terraform-azurerm-vm"
-    vm_name             = "contoh-vm"
-    location            = "West US"
-    resource_group_name = "nama-sg"
-    vm_size             = "Standard_B1s"
-    admin_username      = "azureuser"
-}
-```
+## Outputs
 
-## Penambahan Network Security Group
-```hcl
-module "azurerm_vm" {
-    source              = "github.com/dxh30/terraform-azurerm-vm"
-    vm_name             = "contoh-vm"
-    location            = "West US"
-    resource_group_name = "nama-sg"
-    vm_size             = "Standard_B1s"
-    admin_username      = "azureuser"
-    security_rule       = locals.security_rules
-}
-
-locals {
-  security_rules = [
-    {
-      name                       = "AllowSSH"
-      priority                   = 1000
-      direction                  = "Inbound"
-      access                     = "Allow"
-      protocol                   = "Tcp"
-      source_port_range          = "*"
-      destination_port_range     = "22"
-      source_address_prefix      = "*"
-      destination_address_prefix = "*"
-    },
-    {
-      name                       = "AllowPostgres"
-      priority                   = 1100
-      direction                  = "Inbound"
-      access                     = "Allow"
-      protocol                   = "Tcp"
-      source_port_range          = "*"
-      destination_port_range     = "5432"
-      source_address_prefix      = "*"
-      destination_address_prefix = "*"
-    }
-  ]
-}
-```
+| Name | Description |
+|------|-------------|
+| <a name="output_ssh_private_key"></a> [ssh\_private\_key](#output\_ssh\_private\_key) | The private key for SSH access |
+| <a name="output_vm_id"></a> [vm\_id](#output\_vm\_id) | The ID of the virtual machine |
+| <a name="output_vm_private_ip"></a> [vm\_private\_ip](#output\_vm\_private\_ip) | The private IP address of the VM |
+| <a name="output_vm_public_ip"></a> [vm\_public\_ip](#output\_vm\_public\_ip) | The public IP address of the VM |
